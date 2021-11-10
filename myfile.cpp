@@ -161,7 +161,7 @@ int ATM::GetAccountLogin() const
 
 void ATM::DepositMoney(double depositAmount)
 {
-
+    
 }
 
 
