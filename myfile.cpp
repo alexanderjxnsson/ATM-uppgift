@@ -3,31 +3,25 @@
 #include <iomanip>
 #include <string>
 #include <vector>
-bool menu = true, accountLoginStopper = true;
-int menuChoice;
+std::string username, password;
+bool menu = true, accountLoginStopper = false, addingAccount = true, bAccountMenu = true;
+int menuChoice, numberOfAccounts = 0, whosLoggedIn = 0;
+double AmountDepositMoney = 0;
 void atmMenu();
-enum MenuChoice{CreateAccount = 1, LogIn};
-struct AutoTellerMachine
+void loginMenu();
+enum MenuChoice{CreateAccount = 1, LogIn, Quit};
+struct ATM
 {
-    void CreateNewAccount(std::string newUsername, std::string newPassword)
-    {
-        username = newUsername;
-        password = newPassword;
-    }
-    void AccountLogin(std::string loginUsername, std::string loginPassword)
-    {
-        if (loginUsername == username && loginPassword == password)
-        {
-            std::cout<<"You have logged in!"<<std::endl;
-            menu = false;
-            accountLoginStopper = false;
-        }
-        else
-        {
-            std::cout<<"Wrong username or password!"<<std::endl;
-            accountLoginStopper = false;
-        }
-    }
+    std::vector<ATM> tUsersList;
+    std::string username;
+    std::string password;
+    int loggedInAccountLocation;
+    double accountBalance;
+    double beginningBalance;
+    double lastMoneyMovement;
+    char lastOperation;
+    void CreateNewAccount(std::string newUsername, std::string newPassword);
+    void AccountLogin(std::string loginUsername, std::string loginPassword);
     void DepositMoney(double depositAmount);
     void WithdrawMoney(double withdrawalAmount);
     void SetAccountLogin(int setAccountLocation);
@@ -42,48 +36,27 @@ struct AutoTellerMachine
     char GetLastOperation(int accountID) const;
     std::string GetUsername(int accountID) const;
 
-    int loggedInAccountLocation;
-    double accountBalance;
-    double beginningBalance;
-    double lastMoneyMovement;
-    char lastOperation;
-    std::string username;
-    std::string password;
-};
-AutoTellerMachine users[10];
+}tadmin;
+std::vector<ATM> user_list;
 
 /* declarations end */
 
 /* init start */
 int main(){
-    std::string username, password;
-    AutoTellerMachine admin;
-    
-    int i = 0;
     //Login loop
-    while (menu)
+        while (menu)
     {
         atmMenu();
         std::cin>>menuChoice;
-        bool addingAccount = true;
-        //If-sats som tittar ifall i = 10 och nekar så inga fler konto kan skapas
-        //Alt. en vector
         switch (menuChoice)
         {
             case CreateAccount:
-                std::cout<<"Creating account: \n";
+                std::cout<<"Creating: \n";
                 std::cout<<"Enter a username: ";
                 std::cin>>username;
                 std::cout<<"Enter password: ";
                 std::cin>>password;
-                //admin.CreateNewAccount(username, password);
-                while (addingAccount)
-                {
-                    users[i].username = username;
-                    users[i].password = password;
-                    i++;
-                    addingAccount = false;
-                }
+                tadmin.CreateNewAccount(username, password);
                 break;
             case LogIn:
                 std::cout<<"Login: \n";
@@ -91,27 +64,105 @@ int main(){
                 std::cin>>username;
                 std::cout<<"Enter password: ";
                 std::cin>>password;
-                //admin.AccountLogin(username, password);
-                for (int j = 0; j < 10; j++)
-                {
-                    users[j].AccountLogin(username, password);
-                }
-                
-                std::cout<<"Loading . . ."<<std::endl;
+                tadmin.AccountLogin(username, password);
+                break;
+            case Quit:
+                std::cout<<"Qutting. . ."<<std::endl;
+                menu = false;
                 break;
             default:
                 std::cout<<"Enter a legit command."<<std::endl;
                 break;
         }
     }
-    
 }
 /* init end */
 
 /* functions start */
 void atmMenu()
 {
-    std::cout<<"1. Create account\n2. Log in"<<std::endl;
+    std::cout<<"1. Create account\n2. Log in\n3. Quit"<<std::endl;
 }
+
+void ATM::AccountMenu()
+{
+    enum LoggiedInchoice{eDepositMoney = 1, eWithdrawMoney, eRequestBalance, eLogut};
+    while (bAccountMenu = true)
+    {
+        std::cout<<"\n1. Deposit money\n2. Withdraw money\n3. Request Balance\4. Logut\n";
+        std::cin>>menuChoice;
+        switch (menuChoice)
+        {
+        case eDepositMoney:
+            std::cout<<"Enter the amount you want to depoisit: ";
+            std::cin>>AmountDepositMoney;
+            ATM::DepositMoney(AmountDepositMoney);
+            break;
+        case eWithdrawMoney:
+            break;
+        case eRequestBalance:
+            break;
+        case eLogut:
+            std::cout<<"You have logged out!\n";
+            atmMenu();
+            break;
+        default:
+            std::cout<<"Enter a valid number, please!";
+            break;
+        }
+    }
+}
+
+void ATM::CreateNewAccount(std::string newUsername, std::string newPassword)
+{
+    ATM tTempUsers;
+    tTempUsers.username = newUsername;
+    tTempUsers.password = newPassword;
+    tTempUsers.accountBalance = 0;
+    tTempUsers.beginningBalance = 0;
+    tTempUsers.lastMoneyMovement = 0;
+    tTempUsers.loggedInAccountLocation = whosLoggedIn;
+    tUsersList.push_back(tTempUsers);
+    whosLoggedIn++;
+    std::cout<<"\nThank you, your account has been created!\n";
+    
+}
+
+void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
+{
+    for (int i = 0; i < tadmin.tUsersList.size(); i++)
+    {
+        if ((loginUsername == tadmin.tUsersList[i].username)
+        && (loginPassword == tadmin.tUsersList[i].password))
+        {
+            accountLoginStopper = true;
+            std::cout<<std::endl<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
+            SetAccountLogin(i);
+            std::cout<<loggedInAccountLocation<<std::endl;
+            break;
+        }
+    }
+    if (!accountLoginStopper)
+    {
+        std::cout<<"\nLogin failed!"<<std::endl;
+    }
+    
+}
+
+void ATM::SetAccountLogin(int setAccountLocation)
+{
+    loggedInAccountLocation = setAccountLocation;
+}
+
+int ATM::GetAccountLogin() const
+{
+    return loggedInAccountLocation;
+}
+
+void ATM::DepositMoney(double depositAmount)
+{
+
+}
+
 
 /* functions end */
