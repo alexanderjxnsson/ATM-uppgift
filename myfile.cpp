@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <string>
 #include <vector>
-#include <bits/stdc++.h>
 bool menu = true, accountLoginStopper = true;
 int menuChoice;
 void atmMenu();
@@ -67,6 +66,8 @@ int main(){
         atmMenu();
         std::cin>>menuChoice;
         bool addingAccount = true;
+        //If-sats som tittar ifall i = 10 och nekar så inga fler konto kan skapas
+        //Alt. en vector
         switch (menuChoice)
         {
             case CreateAccount:
