@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 std::string username, password;
-bool menu = true, accountLoginStopper = false, addingAccount = true, bAccountMenu = true;
+bool menu = true, accountLoginStopper = false, bAccountMenu = true;
 int menuChoice, numberOfAccounts = 0, whosLoggedIn = 0;
-double AmountDepositMoney = 0;
+double AmountDepositMoney = 0, AmountWithdrawMoney = 0;
 void atmMenu();
 void loginMenu();
 enum MenuChoice{CreateAccount = 1, LogIn, Quit};
@@ -45,7 +45,7 @@ std::vector<ATM> user_list;
 int main(){
     std::cout<<"Welcome to Movants ATM!\n";
     //Login loop
-        while (menu)
+    while (menu)
     {
         atmMenu();
         std::cin>>menuChoice;
@@ -88,9 +88,9 @@ void atmMenu()
 void ATM::AccountMenu()
 {
     enum LoggiedInchoice{eDepositMoney = 1, eWithdrawMoney, eRequestBalance, eLogut};
-    while (bAccountMenu = true)
+    while (bAccountMenu)
     {
-        std::cout<<"\n1. Deposit money\n2. Withdraw money\n3. Request Balance\4. Logut\n";
+        std::cout<<"\n1. Deposit money\n2. Withdraw money\n3. Request Balance\n4. Logut\n";
         std::cin>>menuChoice;
         switch (menuChoice)
         {
@@ -100,12 +100,17 @@ void ATM::AccountMenu()
             ATM::DepositMoney(AmountDepositMoney);
             break;
         case eWithdrawMoney:
+            std::cout<<"Enter the amount you want to withdraw: ";
+            std::cin>>AmountWithdrawMoney;
+            ATM::WithdrawMoney(AmountWithdrawMoney);
             break;
         case eRequestBalance:
+            std::cout<<"Current balance:\t\t"<<ATM::GetAccountBalance(tadmin.tUsersList[loggedInAccountLocation].loggedInAccountLocation)<<"SEK"<<std::endl;
             break;
         case eLogut:
             std::cout<<"You have logged out!\n";
-            atmMenu();
+            bAccountMenu = false;
+            //atmMenu();
             break;
         default:
             std::cout<<"Enter a valid number, please!";
@@ -138,6 +143,7 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
         {
             accountLoginStopper = true;
             std::cout<<std::endl<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
+            bAccountMenu = true;
             SetAccountLogin(i);
             //std::cout<<loggedInAccountLocation<<std::endl;
             AccountMenu();
@@ -146,9 +152,8 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
     }
     if (!accountLoginStopper)
     {
-        std::cout<<"\nLogin failed!"<<std::endl;
+        std::cout<<"\nLogin failed, please try again!"<<std::endl;
     }
-    
 }
 
 void ATM::SetAccountLogin(int setAccountLocation)
@@ -163,10 +168,20 @@ int ATM::GetAccountLogin() const
 
 void ATM::DepositMoney(double depositAmount)
 {
-    std::cout<<"Starting balande:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<std::endl;
+    std::cout<<"\nStarting balance:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
     tadmin.tUsersList[loggedInAccountLocation].accountBalance += depositAmount;
-    std::cout<<"New balance:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<std::endl;
+    std::cout<<"New balance:\t\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
 }
 
+void ATM::WithdrawMoney(double withdrawalAmount)
+{
+     std::cout<<"\nStarting balande:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
+     tadmin.tUsersList[loggedInAccountLocation].accountBalance -= withdrawalAmount;
+     std::cout<<"New balance:\t\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
+}
 
+double ATM::GetAccountBalance(int accountID) const
+{
+    return tadmin.tUsersList[accountID].accountBalance;
+}
 /* functions end */
