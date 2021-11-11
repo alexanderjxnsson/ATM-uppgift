@@ -43,6 +43,7 @@ std::vector<ATM> user_list;
 
 /* init start */
 int main(){
+    std::cout<<"Welcome to Movants ATM!\n";
     //Login loop
         while (menu)
     {
@@ -81,7 +82,7 @@ int main(){
 /* functions start */
 void atmMenu()
 {
-    std::cout<<"1. Create account\n2. Log in\n3. Quit"<<std::endl;
+    std::cout<<"\n1. Create account\n2. Log in\n3. Quit"<<std::endl;
 }
 
 void ATM::AccountMenu()
@@ -138,7 +139,8 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
             accountLoginStopper = true;
             std::cout<<std::endl<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
             SetAccountLogin(i);
-            std::cout<<loggedInAccountLocation<<std::endl;
+            //std::cout<<loggedInAccountLocation<<std::endl;
+            AccountMenu();
             break;
         }
     }
@@ -161,7 +163,9 @@ int ATM::GetAccountLogin() const
 
 void ATM::DepositMoney(double depositAmount)
 {
-    
+    std::cout<<"Starting balande:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<std::endl;
+    tadmin.tUsersList[loggedInAccountLocation].accountBalance += depositAmount;
+    std::cout<<"New balance:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<std::endl;
 }
 
 
