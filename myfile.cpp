@@ -19,26 +19,24 @@ struct ATM
     double accountBalance;
     double beginningBalance;
     double lastMoneyMovement;
-    char lastOperation;
+    char lastOperation;                                                     
     void CreateNewAccount(std::string newUsername, std::string newPassword);
     void AccountLogin(std::string loginUsername, std::string loginPassword);
-    void DepositMoney(double depositAmount);
-    void WithdrawMoney(double withdrawalAmount);
-    void SetAccountLogin(int setAccountLocation);
-    void SetLastMoneyMovement(int accountID, double amount);
-    void SetBeginningBalance(int accountID);
-    void SetLastOperation(int accountID, char userInput);
-    void AccountMenu();
-    int GetAccountLogin() const;
-    double GetLastMoneyMovement(int accountID) const;
-    double GetAccountBalance(int accountID) const;
-    double GetBeginningBalance(int accountID) const;
-    char GetLastOperation(int accountID) const;
-    std::string GetUsername(int accountID) const;
+    void DepositMoney(double depositAmount);                                
+    void WithdrawMoney(double withdrawalAmount);                            
+    void SetAccountLogin(int setAccountLocation);                           
+    void SetLastMoneyMovement(int accountID, double amount);                
+    void SetBeginningBalance(int accountID);                                
+    void SetLastOperation(int accountID, char userInput);                   
+    void AccountMenu();                                                     
+    int GetAccountLogin() const;                                            
+    double GetLastMoneyMovement(int accountID) const;                       
+    double GetAccountBalance(int accountID) const;                          
+    double GetBeginningBalance(int accountID) const;                        
+    char GetLastOperation(int accountID) const;                             
+    std::string GetUsername(int accountID) const;           //--
 
 }tadmin;
-std::vector<ATM> user_list;
-
 /* declarations end */
 
 /* init start */
@@ -97,18 +95,28 @@ void ATM::AccountMenu()
         case eDepositMoney:
             std::cout<<"Enter the amount you want to depoisit: ";
             std::cin>>AmountDepositMoney;
-            ATM::DepositMoney(AmountDepositMoney);
+            DepositMoney(AmountDepositMoney);
             break;
         case eWithdrawMoney:
             std::cout<<"Enter the amount you want to withdraw: ";
             std::cin>>AmountWithdrawMoney;
-            ATM::WithdrawMoney(AmountWithdrawMoney);
+            WithdrawMoney(AmountWithdrawMoney);
             break;
         case eRequestBalance:
-            std::cout<<"Current balance:\t\t"<<ATM::GetAccountBalance(tadmin.tUsersList[loggedInAccountLocation].loggedInAccountLocation)<<"SEK"<<std::endl;
+            std::cout<<"Beggining balance:\t\t"<<GetBeginningBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
+            if (tadmin.tUsersList[tadmin.loggedInAccountLocation].lastOperation == 'w')
+            {
+                std::cout<<"Withdraw amount:\t\t\t"<<GetLastMoneyMovement(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
+            }
+            else if (tadmin.tUsersList[tadmin.loggedInAccountLocation].lastOperation == 'd')
+            {
+                std::cout<<"Deposit amount:\t\t\t"<<GetLastMoneyMovement(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
+            }
+            std::cout<<"Current balance:\t\t"<<GetAccountBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
             break;
         case eLogut:
             std::cout<<"You have logged out!\n";
+            tadmin.loggedInAccountLocation = -1;
             bAccountMenu = false;
             //atmMenu();
             break;
@@ -117,6 +125,30 @@ void ATM::AccountMenu()
             break;
         }
     }
+}
+
+void ATM::DepositMoney(double depositAmount)
+{
+    SetLastOperation(tadmin.loggedInAccountLocation, 'd');
+    SetBeginningBalance(tadmin.loggedInAccountLocation);
+    tadmin.tUsersList[tadmin.loggedInAccountLocation].accountBalance += depositAmount;
+    SetLastMoneyMovement(tadmin.loggedInAccountLocation, depositAmount);
+}
+
+void ATM::WithdrawMoney(double withdrawalAmount)
+{
+    if (withdrawalAmount < tadmin.tUsersList[tadmin.loggedInAccountLocation].accountBalance)
+    {
+        SetLastOperation(tadmin.loggedInAccountLocation, 'w');
+        SetBeginningBalance(tadmin.loggedInAccountLocation);
+        tadmin.tUsersList[tadmin.loggedInAccountLocation].accountBalance -= withdrawalAmount;
+        SetLastMoneyMovement(tadmin.loggedInAccountLocation, withdrawalAmount);
+    }
+    else
+    {
+        std::cout<<"Not enough money!"<<std::endl;
+    }
+    
 }
 
 void ATM::CreateNewAccount(std::string newUsername, std::string newPassword)
@@ -158,30 +190,41 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
 
 void ATM::SetAccountLogin(int setAccountLocation)
 {
-    loggedInAccountLocation = setAccountLocation;
+    tadmin.loggedInAccountLocation = setAccountLocation;
 }
 
 int ATM::GetAccountLogin() const
 {
-    return loggedInAccountLocation;
-}
-
-void ATM::DepositMoney(double depositAmount)
-{
-    std::cout<<"\nStarting balance:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
-    tadmin.tUsersList[loggedInAccountLocation].accountBalance += depositAmount;
-    std::cout<<"New balance:\t\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
-}
-
-void ATM::WithdrawMoney(double withdrawalAmount)
-{
-     std::cout<<"\nStarting balande:\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
-     tadmin.tUsersList[loggedInAccountLocation].accountBalance -= withdrawalAmount;
-     std::cout<<"New balance:\t\t"<<tadmin.tUsersList[loggedInAccountLocation].accountBalance<<"SEK"<<std::endl;
+    return tadmin.loggedInAccountLocation;
 }
 
 double ATM::GetAccountBalance(int accountID) const
 {
     return tadmin.tUsersList[accountID].accountBalance;
+}
+
+void ATM::SetLastMoneyMovement(int accountID, double amount)
+{
+    tadmin.tUsersList[accountID].lastMoneyMovement = amount;
+}
+
+void ATM::SetBeginningBalance(int accountID)
+{
+    tadmin.tUsersList[accountID].beginningBalance = tadmin.tUsersList[accountID].accountBalance;
+}
+
+void ATM::SetLastOperation(int accountID, char userInput)
+{
+    tadmin.tUsersList[accountID].lastOperation = userInput;
+}
+
+double ATM::GetLastMoneyMovement(int accountID) const
+{
+    return tadmin.tUsersList[accountID].lastMoneyMovement;
+}
+
+double ATM::GetBeginningBalance(int accountID) const
+{
+    return tadmin.tUsersList[accountID].beginningBalance;
 }
 /* functions end */
