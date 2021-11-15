@@ -40,6 +40,7 @@ struct ATM
 
 int main(){
     /* init start */
+    std::cout<<"Welcome to Movants ATM!\n";
     while (menu)
     {
         atmMenu();
@@ -61,7 +62,14 @@ int main(){
                 std::cout<<"Enter password: ";
                 std::cin>>password;
                 tadmin.AccountLogin(username, password);
-                tadmin.AccountMenu();
+                if (tadmin.loggedInAccountLocation >= 0)
+                {
+                    tadmin.AccountMenu();
+                }
+                else
+                {
+                    std::cout<<"Something went wrong in the code, learn to code pls."<<std::endl;
+                }
                 break;
             case Quit:
                 std::cout<<"Quitting. . ."<<std::endl;
@@ -78,7 +86,6 @@ int main(){
 /* functions start */
 void atmMenu()
 {   
-    std::cout<<"Welcome to Movants ATM!\n";
     std::cout<<"\n1. Create account\n2. Log in\n3. Quit"<<std::endl;
 }
 
