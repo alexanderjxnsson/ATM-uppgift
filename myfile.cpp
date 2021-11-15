@@ -48,7 +48,7 @@ int main(){
         switch (menuChoice)
         {
             case CreateAccount:
-                std::cout<<"Creating: \n";
+                std::cout<<"\nCreating: \n";
                 std::cout<<"Enter a username: ";
                 std::cin>>username;
                 std::cout<<"Enter password: ";
@@ -56,7 +56,7 @@ int main(){
                 tadmin.CreateNewAccount(username, password);
                 break;
             case LogIn:
-                std::cout<<"Login: \n";
+                std::cout<<"\nLogin: \n";
                 std::cout<<"Enter a username: ";
                 std::cin>>username;
                 std::cout<<"Enter password: ";
@@ -68,15 +68,15 @@ int main(){
                 }
                 else
                 {
-                    std::cout<<"Something went wrong!"<<std::endl;
+                    std::cout<<"\nSomething went wrong!"<<std::endl;
                 }
                 break;
             case Quit:
-                std::cout<<"Quitting. . ."<<std::endl;
+                std::cout<<"\nQuitting. . ."<<std::endl;
                 menu = false;
                 break;
             default:
-                std::cout<<"Enter a legit command."<<std::endl;
+                std::cout<<"\nEnter a legit command."<<std::endl;
                 break;
         }
     }
@@ -113,7 +113,7 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
         {
             accountLoginStopper = true;
             
-            std::cout<<std::endl<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
+            std::cout<<"\n"<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
             bAccountMenu = true;
             SetAccountLogin(i);
             
@@ -142,20 +142,20 @@ void ATM::AccountMenu()
         switch (menuChoice)
         {
         case eDepositMoney:
-            std::cout<<"Enter the amount you want to depoisit: ";
+            std::cout<<"\nEnter the amount you want to depoisit: ";
             std::cin>>AmountDepositMoney;
             DepositMoney(AmountDepositMoney);
             break;
         case eWithdrawMoney:
-            std::cout<<"Enter the amount you want to withdraw: ";
+            std::cout<<"\nEnter the amount you want to withdraw: ";
             std::cin>>AmountWithdrawMoney;
             WithdrawMoney(AmountWithdrawMoney);
             break;
         case eRequestBalance:
-            std::cout<<"Beggining balance:\t\t"<<GetBeginningBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
+            std::cout<<"\nBeggining balance:\t\t"<<GetBeginningBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
             if (tadmin.tUsersList[tadmin.loggedInAccountLocation].lastOperation == 'w')
             {
-                std::cout<<"Withdraw amount:\t\t\t"<<GetLastMoneyMovement(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
+                std::cout<<"Withdraw amount:\t\t"<<GetLastMoneyMovement(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
             }
             else if (tadmin.tUsersList[tadmin.loggedInAccountLocation].lastOperation == 'd')
             {
@@ -164,13 +164,13 @@ void ATM::AccountMenu()
             std::cout<<"Current balance:\t\t"<<GetAccountBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
             break;
         case eLogut:
-            std::cout<<"You have logged out!\n";
+            std::cout<<"\nYou have logged out!\n";
             tadmin.loggedInAccountLocation = -1;
             bAccountMenu = false;
             //atmMenu();
             break;
         default:
-            std::cout<<"Enter a valid number, please!";
+            std::cout<<"\nEnter a valid number, please!";
             break;
         }
     }
@@ -195,7 +195,7 @@ void ATM::WithdrawMoney(double withdrawalAmount)
     }
     else
     {
-        std::cout<<"Not enough money!"<<std::endl;
+        std::cout<<"\nNot enough money!"<<std::endl;
     }
     
 }
