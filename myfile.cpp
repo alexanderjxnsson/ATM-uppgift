@@ -44,7 +44,7 @@ int main(){
     while (menu)
     {
         atmMenu();
-            std::cin>>menuChoice;
+        std::cin>>menuChoice;
         switch (menuChoice)
         {
             case CreateAccount:
