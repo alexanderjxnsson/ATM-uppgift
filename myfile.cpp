@@ -8,7 +8,6 @@ bool menu = true, accountLoginStopper = false, bAccountMenu = true;
 int menuChoice, numberOfAccounts = 0, whosLoggedIn = 0;
 double AmountDepositMoney = 0, AmountWithdrawMoney = 0;
 void atmMenu();
-void loginMenu();
 enum MenuChoice{CreateAccount = 1, LogIn, Quit};
 struct ATM
 {
@@ -39,14 +38,12 @@ struct ATM
 }tadmin;
 /* declarations end */
 
-/* init start */
 int main(){
-    std::cout<<"Welcome to Movants ATM!\n";
-    //Login loop
+    /* init start */
     while (menu)
     {
         atmMenu();
-        std::cin>>menuChoice;
+            std::cin>>menuChoice;
         switch (menuChoice)
         {
             case CreateAccount:
@@ -64,6 +61,7 @@ int main(){
                 std::cout<<"Enter password: ";
                 std::cin>>password;
                 tadmin.AccountLogin(username, password);
+                tadmin.AccountMenu();
                 break;
             case Quit:
                 std::cout<<"Qutting. . ."<<std::endl;
@@ -74,12 +72,13 @@ int main(){
                 break;
         }
     }
+    /* init end */
 }
-/* init end */
 
 /* functions start */
 void atmMenu()
-{
+{   
+    std::cout<<"Welcome to Movants ATM!\n";
     std::cout<<"\n1. Create account\n2. Log in\n3. Quit"<<std::endl;
 }
 
@@ -107,13 +106,14 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
         {
             accountLoginStopper = true;
             
-            std::cout<<std::endl<<tadmin.username<<" have logged in!"<<std::endl;
+            std::cout<<std::endl<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
             bAccountMenu = true;
             SetAccountLogin(i);
-            AccountMenu();
+            
             break;
         }
     }
+
     if (!accountLoginStopper)
     {
         std::cout<<"\nLogin failed, please try again!"<<std::endl;
