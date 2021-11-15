@@ -64,7 +64,7 @@ int main(){
                 tadmin.AccountMenu();
                 break;
             case Quit:
-                std::cout<<"Qutting. . ."<<std::endl;
+                std::cout<<"Quitting. . ."<<std::endl;
                 menu = false;
                 break;
             default:
