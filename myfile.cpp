@@ -69,6 +69,7 @@ int main(){
                 else
                 {
                     std::cout<<"\nSomething went wrong!"<<std::endl;
+                    tadmin.loggedInAccountLocation = -1;
                 }
                 break;
             case Quit:
