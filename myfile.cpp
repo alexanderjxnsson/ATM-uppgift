@@ -34,7 +34,7 @@ struct ATM
     double GetAccountBalance(int accountID) const;                          
     double GetBeginningBalance(int accountID) const;                        
     char GetLastOperation(int accountID) const;                             
-    std::string GetUsername(int accountID) const;           //--
+    std::string GetUsername(int accountID) const; //--
 
 }tadmin;
 /* declarations end */
@@ -81,6 +81,48 @@ int main(){
 void atmMenu()
 {
     std::cout<<"\n1. Create account\n2. Log in\n3. Quit"<<std::endl;
+}
+
+void ATM::CreateNewAccount(std::string newUsername, std::string newPassword)
+{
+    ATM tTempUsers;
+    tTempUsers.username = newUsername;
+    tTempUsers.password = newPassword;
+    tTempUsers.accountBalance = 0;
+    tTempUsers.beginningBalance = 0;
+    tTempUsers.lastMoneyMovement = 0;
+    tTempUsers.loggedInAccountLocation = whosLoggedIn;
+    tUsersList.push_back(tTempUsers);
+    whosLoggedIn++;
+    std::cout<<"\nThank you, your account has been created!\n";
+    
+}
+
+void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
+{
+    for (int i = 0; i < tadmin.tUsersList.size(); i++)
+    {
+        if ((loginUsername == tadmin.tUsersList[i].username)
+        && (loginPassword == tadmin.tUsersList[i].password))
+        {
+            accountLoginStopper = true;
+            
+            std::cout<<std::endl<<tadmin.username<<" have logged in!"<<std::endl;
+            bAccountMenu = true;
+            SetAccountLogin(i);
+            AccountMenu();
+            break;
+        }
+    }
+    if (!accountLoginStopper)
+    {
+        std::cout<<"\nLogin failed, please try again!"<<std::endl;
+    }
+}
+
+void ATM::SetAccountLogin(int setAccountLocation)
+{
+    tadmin.loggedInAccountLocation = setAccountLocation;
 }
 
 void ATM::AccountMenu()
@@ -149,48 +191,6 @@ void ATM::WithdrawMoney(double withdrawalAmount)
         std::cout<<"Not enough money!"<<std::endl;
     }
     
-}
-
-void ATM::CreateNewAccount(std::string newUsername, std::string newPassword)
-{
-    ATM tTempUsers;
-    tTempUsers.username = newUsername;
-    tTempUsers.password = newPassword;
-    tTempUsers.accountBalance = 0;
-    tTempUsers.beginningBalance = 0;
-    tTempUsers.lastMoneyMovement = 0;
-    tTempUsers.loggedInAccountLocation = whosLoggedIn;
-    tUsersList.push_back(tTempUsers);
-    whosLoggedIn++;
-    std::cout<<"\nThank you, your account has been created!\n";
-    
-}
-
-void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
-{
-    for (int i = 0; i < tadmin.tUsersList.size(); i++)
-    {
-        if ((loginUsername == tadmin.tUsersList[i].username)
-        && (loginPassword == tadmin.tUsersList[i].password))
-        {
-            accountLoginStopper = true;
-            std::cout<<std::endl<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
-            bAccountMenu = true;
-            SetAccountLogin(i);
-            //std::cout<<loggedInAccountLocation<<std::endl;
-            AccountMenu();
-            break;
-        }
-    }
-    if (!accountLoginStopper)
-    {
-        std::cout<<"\nLogin failed, please try again!"<<std::endl;
-    }
-}
-
-void ATM::SetAccountLogin(int setAccountLocation)
-{
-    tadmin.loggedInAccountLocation = setAccountLocation;
 }
 
 int ATM::GetAccountLogin() const
