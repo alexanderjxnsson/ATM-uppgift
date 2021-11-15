@@ -68,7 +68,7 @@ int main(){
                 }
                 else
                 {
-                    std::cout<<"Something went wrong in the code, learn to code pls."<<std::endl;
+                    std::cout<<"Something went wrong!"<<std::endl;
                 }
                 break;
             case Quit:
