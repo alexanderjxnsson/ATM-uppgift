@@ -64,10 +64,12 @@ int main(){
                 tadmin.AccountLogin(username, password);
                 if (tadmin.loggedInAccountLocation >= 0)
                 {
+                    //If LoggedInAccountLocation is getting an index number from 0 and up we access AccountMenu
                     tadmin.AccountMenu();
                 }
                 else
                 {
+                    //Resetting LoggedInAccountLocation if we fail to login, haven't seen this problem yet.
                     std::cout<<"\nSomething went wrong!"<<std::endl;
                     tadmin.loggedInAccountLocation = -1;
                 }
@@ -77,7 +79,7 @@ int main(){
                 menu = false;
                 break;
             default:
-                std::cout<<"\nEnter a legit command."<<std::endl;
+                std::cout<<"\nEnter a legit command, please!"<<std::endl;
                 break;
         }
     }
@@ -113,11 +115,10 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
         && (loginPassword == tadmin.tUsersList[i].password))
         {
             accountLoginStopper = true;
-            
             std::cout<<"\n"<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
             bAccountMenu = true;
+            //Sending index number to SetAccountLogin to keep track of who is logged in
             SetAccountLogin(i);
-            
             break;
         }
     }
