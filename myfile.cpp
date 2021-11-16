@@ -8,6 +8,7 @@ bool menu = true, accountLoginStopper = false, bAccountMenu = true;
 int menuChoice, numberOfAccounts = 0, whosLoggedIn = 0;
 double AmountDepositMoney = 0, AmountWithdrawMoney = 0;
 void atmMenu();
+void welcomeMenu();
 enum MenuChoice{CreateAccount = 1, LogIn, Quit};
 struct ATM
 {
@@ -40,7 +41,7 @@ struct ATM
 
 int main(){
     /* init start */
-    std::cout<<"Welcome to Movants ATM!\n";
+    welcomeMenu();
     while (menu)
     {
         atmMenu();
@@ -81,6 +82,13 @@ int main(){
 }
 
 /* functions start */
+void welcomeMenu()
+{   
+    std::cout<<"################################\n";
+    std::cout<<"#   Welcome to Movants ATM!    #\n";
+    std::cout<<"################################\n";
+}
+
 void atmMenu()
 {   
     std::cout<<"\n1. Create account\n2. Log in\n3. Quit"<<std::endl;
