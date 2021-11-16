@@ -1,3 +1,7 @@
+/*
+    Alexander Jönsson
+*/
+
 /* declarations start */
 #include <iostream>
 #include <iomanip>
