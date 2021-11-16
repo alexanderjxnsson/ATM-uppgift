@@ -151,12 +151,26 @@ void ATM::AccountMenu()
         case eDepositMoney:
             std::cout<<"\nEnter the amount you want to depoisit: ";
             std::cin>>AmountDepositMoney;
-            DepositMoney(AmountDepositMoney);
+            if (AmountDepositMoney > 0)
+            {
+                DepositMoney(AmountDepositMoney);
+            }
+            else
+            {
+                std::cout<<"\nPlease enter a value over 0!\n";
+            }
             break;
         case eWithdrawMoney:
             std::cout<<"\nEnter the amount you want to withdraw: ";
             std::cin>>AmountWithdrawMoney;
-            WithdrawMoney(AmountWithdrawMoney);
+            if (AmountWithdrawMoney > 0)
+            {
+                WithdrawMoney(AmountWithdrawMoney);
+            }
+            else
+            {
+                std::cout<<"\nPlease enter a value over 0!\n";
+            }
             break;
         case eRequestBalance:
             std::cout<<"\nBeggining balance:\t\t"<<GetBeginningBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
