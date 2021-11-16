@@ -189,11 +189,6 @@ void ATM::SetLastOperation(int accountID, char userInput)
     tadmin.tUsersList[accountID].lastOperation = userInput;
 }
 
-double ATM::GetLastMoneyMovement(int accountID) const
-{
-    return tadmin.tUsersList[accountID].lastMoneyMovement;
-}
-
 void ATM::SetBeginningBalance(int accountID)
 {
     tadmin.tUsersList[accountID].beginningBalance = tadmin.tUsersList[accountID].accountBalance;
@@ -202,6 +197,26 @@ void ATM::SetBeginningBalance(int accountID)
 void ATM::SetLastMoneyMovement(int accountID, double amount)
 {
     tadmin.tUsersList[accountID].lastMoneyMovement = amount;
+}
+
+int ATM::GetAccountLogin() const
+{
+    return tadmin.loggedInAccountLocation;
+}
+
+double ATM::GetAccountBalance(int accountID) const
+{
+    return tadmin.tUsersList[accountID].accountBalance;
+}
+
+double ATM::GetBeginningBalance(int accountID) const
+{
+    return tadmin.tUsersList[accountID].beginningBalance;
+}
+
+double ATM::GetLastMoneyMovement(int accountID) const
+{
+    return tadmin.tUsersList[accountID].lastMoneyMovement;
 }
 
 void ATM::DepositMoney(double depositAmount)
@@ -226,20 +241,5 @@ void ATM::WithdrawMoney(double withdrawalAmount)
         std::cout<<"\nNot enough money!"<<std::endl;
     }
     
-}
-
-int ATM::GetAccountLogin() const
-{
-    return tadmin.loggedInAccountLocation;
-}
-
-double ATM::GetAccountBalance(int accountID) const
-{
-    return tadmin.tUsersList[accountID].accountBalance;
-}
-
-double ATM::GetBeginningBalance(int accountID) const
-{
-    return tadmin.tUsersList[accountID].beginningBalance;
 }
 /* functions end */
