@@ -140,6 +140,26 @@ void ATM::SetAccountLogin(int setAccountLocation)
     tadmin.loggedInAccountLocation = setAccountLocation;
 }
 
+void ATM::SetLastOperation(int accountID, char userInput)
+{
+    tadmin.tUsersList[accountID].lastOperation = userInput;
+}
+
+double ATM::GetLastMoneyMovement(int accountID) const
+{
+    return tadmin.tUsersList[accountID].lastMoneyMovement;
+}
+
+void ATM::SetBeginningBalance(int accountID)
+{
+    tadmin.tUsersList[accountID].beginningBalance = tadmin.tUsersList[accountID].accountBalance;
+}
+
+void ATM::SetLastMoneyMovement(int accountID, double amount)
+{
+    tadmin.tUsersList[accountID].lastMoneyMovement = amount;
+}
+
 void ATM::AccountMenu()
 {
     enum LoggiedInchoice{eDepositMoney = 1, eWithdrawMoney, eRequestBalance, eLogut};
@@ -216,26 +236,6 @@ int ATM::GetAccountLogin() const
 double ATM::GetAccountBalance(int accountID) const
 {
     return tadmin.tUsersList[accountID].accountBalance;
-}
-
-void ATM::SetLastMoneyMovement(int accountID, double amount)
-{
-    tadmin.tUsersList[accountID].lastMoneyMovement = amount;
-}
-
-void ATM::SetBeginningBalance(int accountID)
-{
-    tadmin.tUsersList[accountID].beginningBalance = tadmin.tUsersList[accountID].accountBalance;
-}
-
-void ATM::SetLastOperation(int accountID, char userInput)
-{
-    tadmin.tUsersList[accountID].lastOperation = userInput;
-}
-
-double ATM::GetLastMoneyMovement(int accountID) const
-{
-    return tadmin.tUsersList[accountID].lastMoneyMovement;
 }
 
 double ATM::GetBeginningBalance(int accountID) const
