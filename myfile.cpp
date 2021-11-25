@@ -6,19 +6,21 @@
 #include <iomanip>
 #include <string>
 #include <vector>
-std::string username, password;
+#include <fstream>
+std::string username, password, accountFile = "accounts.csv";
 bool menu = true, accountLoginStopper = false, bAccountMenu = true;
-int menuChoice, numberOfAccounts = 0, whosLoggedIn = 0;
+int menuChoice, numberOfAccounts = 0, cusIDtracker = 2;
 double AmountDepositMoney = 0, AmountWithdrawMoney = 0;
 void atmMenu();
 void welcomeMenu();
+bool fileOK();
 enum MenuChoice{CreateAccount = 1, LogIn, Quit};
 struct ATM
 {
-    std::vector<ATM> tUsersList;
+    
+    int loggedInAccountLocation;
     std::string username;
     std::string password;
-    int loggedInAccountLocation;
     double accountBalance;
     double beginningBalance;
     double lastMoneyMovement;
@@ -40,13 +42,18 @@ struct ATM
     std::string GetUsername(int accountID) const; //--
 
 }tadmin;
+std::vector<ATM> vUsersList;
+std::fstream fout;
+std::fstream fin;
 /* declarations end */
 
 int main(){
     /* init start */
-    welcomeMenu();
+    fileOK();
+    
     while (menu)
     {
+        welcomeMenu();
         atmMenu();
         std::cin>>menuChoice;
         switch (menuChoice)
@@ -80,6 +87,7 @@ int main(){
                 std::cout<<"\nEnter a legit command, please!"<<std::endl;
                 break;
         }
+
     }
     /* init end */
 }
@@ -92,40 +100,71 @@ void welcomeMenu()
     std::cout<<"################################\n";
 }
 
+bool fileOK()
+{
+    fout.open(accountFile, std::ios::out | std::ios::app);
+    if (fout.is_open() == true)
+    {
+        std::cout<<"The file is ok!\n";
+        system("pause");
+        system("cls");
+        return true;
+        
+    }
+    else
+    {
+        std::cout<<"The file is not OK!\n";
+        system("pause");
+        return false;
+    }
+    
+}
+
 void atmMenu()
 {   
+    
     std::cout<<"\n1. Create account\n2. Log in\n3. Quit"<<std::endl;
 }
 
 void ATM::CreateNewAccount(std::string newUsername, std::string newPassword)
 {
-    ATM tTempUsers;
-    tTempUsers.username = newUsername;
-    tTempUsers.password = newPassword;
-    tTempUsers.accountBalance = 0;
-    tTempUsers.beginningBalance = 0;
-    tTempUsers.lastMoneyMovement = 0;
-    tTempUsers.loggedInAccountLocation = whosLoggedIn;
-    tUsersList.push_back(tTempUsers);
-    whosLoggedIn++;
+    tadmin.username = newUsername;
+    tadmin.password = newPassword;
+    tadmin.accountBalance = 0;
+    tadmin.beginningBalance = 0;
+    tadmin.lastMoneyMovement = 0;
+    tadmin.loggedInAccountLocation = cusIDtracker;
+    cusIDtracker++;
     std::cout<<"\nThank you, your account has been created!\n";
+    fout << tadmin.loggedInAccountLocation << ","
+         << tadmin.username << ","
+         << tadmin.password << ","
+         << tadmin.accountBalance << ","
+         << tadmin.beginningBalance << ","
+         << tadmin.lastMoneyMovement << "\n";
+    vUsersList.push_back(tadmin);
+    fout.close();
+    system("pause");
+    system("cls");
     
 }
 
 void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
 {
-    for (int i = 0; i < tadmin.tUsersList.size(); i++)
+    for (int i = 0; i < vUsersList.size(); i++)
     {
         
-        if ((loginUsername == tadmin.tUsersList[i].username)
-        && (loginPassword == tadmin.tUsersList[i].password))
+        if ((loginUsername == vUsersList[i].username)
+        && (loginPassword == vUsersList[i].password))
         {
             //If username and password is correct we print out the logged in user and activate the account menu bool
             accountLoginStopper = true;
-            std::cout<<"\n"<<tadmin.tUsersList[i].username<<" have logged in!"<<std::endl;
+            std::cout<<"\n"<<vUsersList[i].username<<" have logged in!"<<std::endl;
             bAccountMenu = true;
             //Sending index number to SetAccountLogin to keep track of who is logged in
             SetAccountLogin(i);
+            system("pause");
+            system("cls");
             break;
         }
     }
@@ -135,11 +174,14 @@ void ATM::AccountLogin(std::string loginUsername, std::string loginPassword)
         //If the login information isn't correct the bool is false and we print out an error message
         std::cout<<"\nLogin failed, please try again!"<<std::endl;
         tadmin.loggedInAccountLocation = -1;
+        system("pause");
+        system("cls");
     }
 }
 
 void ATM::AccountMenu()
 {
+    welcomeMenu();
     enum LoggiedInchoice{eDepositMoney = 1, eWithdrawMoney, eRequestBalance, eLogut};
     while (bAccountMenu)
     {
@@ -173,11 +215,11 @@ void ATM::AccountMenu()
             break;
         case eRequestBalance:
             std::cout<<"\nBeggining balance:\t\t"<<GetBeginningBalance(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
-            if (tadmin.tUsersList[tadmin.loggedInAccountLocation].lastOperation == 'w')
+            if (vUsersList[tadmin.loggedInAccountLocation].lastOperation == 'w')
             {
                 std::cout<<"Withdraw amount:\t\t"<<GetLastMoneyMovement(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
             }
-            else if (tadmin.tUsersList[tadmin.loggedInAccountLocation].lastOperation == 'd')
+            else if (vUsersList[tadmin.loggedInAccountLocation].lastOperation == 'd')
             {
                 std::cout<<"Deposit amount:\t\t\t"<<GetLastMoneyMovement(tadmin.loggedInAccountLocation)<<"SEK"<<std::endl;
             }
@@ -203,17 +245,17 @@ void ATM::SetAccountLogin(int setAccountLocation)
 
 void ATM::SetLastOperation(int accountID, char userInput)
 {
-    tadmin.tUsersList[accountID].lastOperation = userInput;
+    vUsersList[accountID].lastOperation = userInput;
 }
 
 void ATM::SetBeginningBalance(int accountID)
 {
-    tadmin.tUsersList[accountID].beginningBalance = tadmin.tUsersList[accountID].accountBalance;
+    vUsersList[accountID].beginningBalance = vUsersList[accountID].accountBalance;
 }
 
 void ATM::SetLastMoneyMovement(int accountID, double amount)
 {
-    tadmin.tUsersList[accountID].lastMoneyMovement = amount;
+    vUsersList[accountID].lastMoneyMovement = amount;
 }
 
 int ATM::GetAccountLogin() const
@@ -223,34 +265,34 @@ int ATM::GetAccountLogin() const
 
 double ATM::GetAccountBalance(int accountID) const
 {
-    return tadmin.tUsersList[accountID].accountBalance;
+    return vUsersList[accountID].accountBalance;
 }
 
 double ATM::GetBeginningBalance(int accountID) const
 {
-    return tadmin.tUsersList[accountID].beginningBalance;
+    return vUsersList[accountID].beginningBalance;
 }
 
 double ATM::GetLastMoneyMovement(int accountID) const
 {
-    return tadmin.tUsersList[accountID].lastMoneyMovement;
+    return vUsersList[accountID].lastMoneyMovement;
 }
 
 void ATM::DepositMoney(double depositAmount)
 {
     SetLastOperation(tadmin.loggedInAccountLocation, 'd');
     SetBeginningBalance(tadmin.loggedInAccountLocation);
-    tadmin.tUsersList[tadmin.loggedInAccountLocation].accountBalance += depositAmount;
+    vUsersList[tadmin.loggedInAccountLocation].accountBalance += depositAmount;
     SetLastMoneyMovement(tadmin.loggedInAccountLocation, depositAmount);
 }
 
 void ATM::WithdrawMoney(double withdrawalAmount)
 {
-    if (withdrawalAmount < tadmin.tUsersList[tadmin.loggedInAccountLocation].accountBalance)
+    if (withdrawalAmount < vUsersList[tadmin.loggedInAccountLocation].accountBalance)
     {
         SetLastOperation(tadmin.loggedInAccountLocation, 'w');
         SetBeginningBalance(tadmin.loggedInAccountLocation);
-        tadmin.tUsersList[tadmin.loggedInAccountLocation].accountBalance -= withdrawalAmount;
+        vUsersList[tadmin.loggedInAccountLocation].accountBalance -= withdrawalAmount;
         SetLastMoneyMovement(tadmin.loggedInAccountLocation, withdrawalAmount);
     }
     else
